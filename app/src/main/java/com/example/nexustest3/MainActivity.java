@@ -3,6 +3,8 @@ package com.example.nexustest3;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
@@ -21,6 +23,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        fragment2 recyclerviewFragment=new fragment2();
+        FragmentManager fragmentManager=getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.fragmentContainer,recyclerviewFragment);
+        fragmentTransaction.commit();
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, new fragment1()).commit();
         bottomNavigationView = findViewById(R.id.bottomNav);
