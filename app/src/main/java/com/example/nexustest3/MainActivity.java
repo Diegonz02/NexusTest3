@@ -9,9 +9,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.CheckBox;
+import android.widget.RadioGroup;
 
+import com.github.mikephil.charting.charts.LineChart;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.fragmentContainer,recyclerviewFragment);
         fragmentTransaction.commit();
+
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, new fragment1()).commit();
         bottomNavigationView = findViewById(R.id.bottomNav);

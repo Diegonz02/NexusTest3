@@ -10,63 +10,57 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.nexustest3.util.ApiUtilites;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class fragment3 extends Fragment {
+    String api = "16609499690f493daaaccb78ad3e9eaa";
+    ArrayList<ModelClass> modelClassArrayList;
+    Adapter adapter;
+    String country = "us";
+    private RecyclerView recyclerViewofHome;
+    private String category = "business";
 
-
-    public fragment3(){}
-
-    public static fragment3 newInstance(){
-        return new fragment3();
-    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewGroup rootview = (ViewGroup) inflater.inflate(R.layout.fragment3,container, false);
+        ViewGroup rootview = (ViewGroup) inflater.inflate(R.layout.fragment3, container, false);
+        recyclerViewofHome = rootview.findViewById(R.id.newsrecyclerview);
+        modelClassArrayList = new ArrayList<>();
+        recyclerViewofHome.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new Adapter(getContext(), modelClassArrayList);
+        recyclerViewofHome.setAdapter(adapter);
+        findNews();
         return rootview;
     }
 
-//    public static final String ISO_8601_24H_FULL_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
-//
-//    final String src;
-//    final String img;
-//    final String lastUpdated;
-//    final String title;
-//    final String url;
-//
-//    @RequiresApi(api = Build.VERSION_CODES.O)
-//    public News (String src, String img, String title, String timestamp, String url){
-//
-//        // this is need since new android accepts only https calls
-//        String urlHttps = img.replaceFirst("(?i)^http://", "https://");
-//
-//        this.src = src;
-//        this.img = urlHttps;
-//        this.title = title;
-//        this.url = url;
-//
-//        Date currentDate = new Date();
-//        Instant instant = Instant.parse(timestamp);
-//        long diff = currentDate.getTime() - instant.toEpochMilli();
-//        long days = (diff / (60*60*24*1000));
-//        String lastAgoTxt = " days ago";
-//
-//        if (days <= 0){
-//            days = (diff / (60*60*1000));
-//
-//            lastAgoTxt = "hours ago";
-//
-//            if (days <= 0){
-//                days = (diff / (60*1000));
-//                lastAgoTxt = "minutes ago";
-//            }
-//        }
-//
-//        this.lastUpdated = days + lastAgoTxt;
-//
-//    }
+    private void findNews() {
+
+        ApiUtilites.getApiInterface().getCategoryNews(country, category, 100, api).enqueue(new Callback<NewsMain>() {
+            @Override
+            public void onResponse(Call<NewsMain> call, Response<NewsMain> response) {
+                if (response.isSuccessful()) {
+                    modelClassArrayList.addAll(response.body().getArticles());
+                    adapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<NewsMain> call, Throwable t) {
+
+            }
+        });
+    }
+
 }
