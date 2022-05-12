@@ -48,8 +48,6 @@ public class fragment1 extends Fragment  {
 
     private LineChart lineChart;
     private TextInputLayout stockTickerTextInputLayout;
-    //private RadioGroup periodRadioGroup, intervalRadioGroup;
-    private CheckBox highCheckBox, lowCheckBox, closeCheckBox;
 
     @Nullable
     @Override
@@ -58,12 +56,6 @@ public class fragment1 extends Fragment  {
 
         lineChart = rootview.findViewById(R.id.activity_main_linechart);
         stockTickerTextInputLayout = rootview.findViewById(R.id.activity_main_stockticker);
-//        periodRadioGroup = rootview.findViewById(R.id.activity_main_period_radiogroup);
-//        intervalRadioGroup = rootview.findViewById(R.id.activity_main_priceinterval);
-
-        highCheckBox = rootview.findViewById(R.id.activity_main_high);
-        lowCheckBox = rootview.findViewById(R.id.activity_main_low);
-        closeCheckBox = rootview.findViewById(R.id.activity_main_close);
 
         setHasOptionsMenu(true);
         configureLineChart();
@@ -114,55 +106,20 @@ public class fragment1 extends Fragment  {
     }
 
     private void getStockData() {
-//        long endTime = System.currentTimeMillis() / 1000;
-//        long startTime = 0;
-//        switch(periodRadioGroup.getCheckedRadioButtonId()) { // the problem is that the values are too high fix formula
-//            case R.id.activity_main_period1d:
-//                startTime = endTime - (60 * 60 * 24);
-//                break;
-//            case R.id.activity_main_period30d:
-//                startTime = endTime - (60 * 60 * 24 * 30);
-//                break;
-//            case R.id.activity_main_period90d:
-//                startTime = endTime - (60 * 60 * 24 * 90);
-//                break;
-//            case R.id.activity_main_period12m:
-//                startTime = endTime - (60 * 60 * 24 * 365);
-//                break;
-//        }
-//
-//
-//        String frequency = "";
-//        switch (intervalRadioGroup.getCheckedRadioButtonId()) {
-//            case R.id.activity_main_interval1d:
-//                frequency = "1d";
-//                break;
-//            case R.id.activity_main_interval1w:
-//                frequency = "1w";
-//                break;
-//            case R.id.activity_main_interval1m:
-//                frequency = "1m";
-//                break;
-//        }
-
-        yahooFinanceAPI.getHistoricalData(                      // this part had 3 parameters extra but were deleted to let it work
+        yahooFinanceAPI.getHistoricalData(
                 "history",
                 stockTickerTextInputLayout.getEditText().getText().toString()
         ).enqueue(new Callback<HistoricalDataResponse>() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onResponse(Call<HistoricalDataResponse> call, Response<HistoricalDataResponse> response) {
-                ArrayList<Entry> pricesHigh = new ArrayList<>();
-                ArrayList<Entry> pricesLow = new ArrayList<>();
                 ArrayList<Entry> pricesClose = new ArrayList<>();
 
                 if (response.body() != null) {
                     for (int i = 0; i < response.body().prices.size(); i++) {
                         float x = response.body().prices.get(i).date;
-                        float y = response.body().prices.get(i).high;
+                        float y = response.body().prices.get(i).close;
                         if (y != 0f) {
-                            pricesHigh.add(new Entry(x, response.body().prices.get(i).high));
-                            pricesLow.add(new Entry(x, response.body().prices.get(i).low));
                             pricesClose.add(new Entry(x, response.body().prices.get(i).close));
                         }
                     }
@@ -173,11 +130,9 @@ public class fragment1 extends Fragment  {
                         }
                     };
 
-                    pricesHigh.sort(comparator);
-                    pricesLow.sort(comparator);
                     pricesClose.sort(comparator);
 
-                    setLineChartData(pricesHigh, pricesLow, pricesClose);
+                    setLineChartData( pricesClose);
                 }
             }
 
@@ -189,45 +144,18 @@ public class fragment1 extends Fragment  {
     }
 
 
-    // remove the checkbox and make it work so that the check boxes dont show in the app
 
-
-
-    private void setLineChartData(ArrayList<Entry> pricesHigh, ArrayList<Entry> pricesLow, ArrayList<Entry> pricesClose) {
+    private void setLineChartData(ArrayList<Entry> pricesClose) {
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
 
-        if (highCheckBox.isChecked()) {
-            LineDataSet highLineDataSet = new LineDataSet(pricesHigh, stockTickerTextInputLayout.getEditText().getText().toString() + " Price (High)");
-            highLineDataSet.setDrawCircles(true);
-            highLineDataSet.setCircleRadius(1);
-            highLineDataSet.setDrawValues(false);
-            highLineDataSet.setLineWidth(3);
-            highLineDataSet.setColor(Color.GREEN);
-            highLineDataSet.setCircleColor(Color.GREEN);
-            dataSets.add(highLineDataSet);
-        }
-
-        if (lowCheckBox.isChecked()) {
-            LineDataSet lowLineDataSet = new LineDataSet(pricesLow, stockTickerTextInputLayout.getEditText().getText().toString() + " Price (Low)");
-            lowLineDataSet.setDrawCircles(true);
-            lowLineDataSet.setCircleRadius(1);
-            lowLineDataSet.setDrawValues(false);
-            lowLineDataSet.setLineWidth(3);
-            lowLineDataSet.setColor(Color.RED);
-            lowLineDataSet.setCircleColor(Color.RED);
-            dataSets.add(lowLineDataSet);
-        }
-
-        if (closeCheckBox.isChecked()) {
-            LineDataSet closeLineDataSet = new LineDataSet(pricesClose, stockTickerTextInputLayout.getEditText().getText().toString() + " Price (Close)");
-            closeLineDataSet.setDrawCircles(true);
-            closeLineDataSet.setCircleRadius(1);
-            closeLineDataSet.setDrawValues(false);
-            closeLineDataSet.setLineWidth(3);
-            closeLineDataSet.setColor(Color.rgb(255, 165, 0));
-            closeLineDataSet.setCircleColor(Color.rgb(255, 165, 0));
-            dataSets.add(closeLineDataSet);
-        }
+        LineDataSet closeLineDataSet = new LineDataSet(pricesClose, stockTickerTextInputLayout.getEditText().getText().toString() + " Price (Close)");
+        closeLineDataSet.setDrawCircles(true);
+        closeLineDataSet.setCircleRadius(1);
+        closeLineDataSet.setDrawValues(false);
+        closeLineDataSet.setLineWidth(3);
+        closeLineDataSet.setColor(Color.rgb(255, 165, 0));
+        closeLineDataSet.setCircleColor(Color.rgb(255, 165, 0));
+        dataSets.add(closeLineDataSet);
 
         LineData lineData = new LineData(dataSets);
         lineChart.setData(lineData);

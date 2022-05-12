@@ -12,10 +12,7 @@ interface YahooFinanceAPI {
     })
     @GET("/stock/v3/get-historical-data")
     Call<HistoricalDataResponse> getHistoricalData(
-//            @Query("frequency") String frequency,
             @Query("filter") String filter,
-//            @Query("period1") String period1,
-//            @Query("period2") String period2,
             @Query("symbol") String symbol
     );
 }

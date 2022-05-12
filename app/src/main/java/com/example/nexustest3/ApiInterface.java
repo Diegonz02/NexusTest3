@@ -8,13 +8,6 @@ public interface ApiInterface {
     String BASE_URL = "https://newsapi.org/v2/";
 
     @GET("top-headlines")
-    Call<NewsMain> getNews(
-            @Query("country") String country,
-            @Query("pageSize") int pagesize,
-            @Query("apikey") String apikey
-    );
-
-    @GET("top-headlines")
     Call<NewsMain> getCategoryNews(
             @Query("country") String country,
             @Query("category") String category,

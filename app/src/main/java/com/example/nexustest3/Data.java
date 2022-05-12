@@ -15,11 +15,10 @@ public class Data {
                     "Choosing Brokerage \n" +
                     "A brokerage is a firm that acts as a broker. Here we can buy and sell stocks of " +
                     "companies, or other securities. \n" +
-                    "Brokerage examples: TD Ameritrade, Robinhood, E*Trade \n" +
+                    "Brokerage examples: TD Ameritrade, Robinhood\n" +
                     "TD Ameritrade has the following: Great customer service, No minimum money needed, " +
                     "for traders and investors, etc. \n" +
-                    "Robinhood has the following: User friendly, no minimum money needed, crypto, etc. \n" +
-                    "E*Trade has the following: Customer Service, easy to use, etc. \n",
+                    "Robinhood has the following: User friendly, no minimum money needed, crypto, etc. \n",
             "What to look for in a company \n\n" +
                     "Here are some questions you should ask yourself before buying shares of a company: \n" +
                     "What do they do? \n" +
@@ -57,8 +56,4 @@ public class Data {
                     "EX. $T $VALE $IBM $OHI $PSEC "
     };
 
-    public static String[] description= new String[]{
-            "In dividends we are.... ", "dkgfkbgsdf" ,"fdgsdfg","hsthrtyhrth",
-            "thtjrtjrtjrt", "sdjgbejbg"
-    };
 }
